@@ -10,12 +10,14 @@ import com.titxu.blog.vo.SysUserVo;
 import com.titxu.blog.vo.UserVo;
 import com.titxu.blog.utils.result.CodeMsg;
 import com.titxu.blog.utils.result.Result;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
@@ -56,10 +58,12 @@ public class SysUserServiceImpl implements SysUserService {
          */
         if (StringUtils.isBlank(token)){
             // 不存在校验
+            log.info("用户token不存在");
             return Result.fail(CodeMsg.TOKEN_NOT_EXIST.getRetCode(), CodeMsg.TOKEN_NOT_EXIST.getMessage());
         }
         SysUserVo sysUserVo = tokenService.checkToken(token);
         if (sysUserVo==null){
+            log.info("用户信息为空或者token校验失败");
             return Result.fail(CodeMsg.TOKEN_CHECK_NOT.getRetCode(),CodeMsg.TOKEN_CHECK_NOT.getMessage());
         }
 
@@ -76,6 +80,7 @@ public class SysUserServiceImpl implements SysUserService {
 //        loginUserVo.setNickname(sysUserVo.getNickname());
 //        loginUserVo.setAvatar(sysUserVo.getAvatar());
 //        loginUserVo.setLastlogin(sysUserVo.getLastLogin());
+        log.info("用户信息获取成功");
 
         return Result.success(loginUserVo);
     }
